@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/comics")
 public class ComicController {
-    @CrossOrigin(origins = "http://127.0.0.1:4200")
+    @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
     @GetMapping("/get/all")
     public List<Comic> getComics() {
         Comic comic1 = new Comic("Gym Fever");
