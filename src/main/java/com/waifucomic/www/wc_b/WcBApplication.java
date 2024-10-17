@@ -1,7 +1,13 @@
 package com.waifucomic.www.wc_b;
 
+import com.waifucomic.www.wc_b.user.User;
+import com.waifucomic.www.wc_b.user.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class WcBApplication {
@@ -10,4 +16,16 @@ public class WcBApplication {
 		SpringApplication.run(WcBApplication.class, args);
 	}
 
+	@Bean
+	public CommandLineRunner demo(
+			@Value("${admin.user}") String username,
+			@Value("${admin.passwd}") String passwd,
+			UserRepository repository
+	) {
+		return (args) -> {
+			repository.deleteAll();
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			repository.save(new User(username, encoder.encode(passwd)));
+		};
+	}
 }
