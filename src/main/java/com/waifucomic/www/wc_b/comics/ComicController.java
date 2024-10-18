@@ -2,16 +2,24 @@ package com.waifucomic.www.wc_b.comics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/comics")
 public class ComicController {
-    private Logger logger = LoggerFactory.getLogger(ComicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComicController.class);
+    private ComicService service;
+
+    @Autowired
+    public ComicController(ComicService service) {
+        this.service = service;
+    }
 
     @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
     @GetMapping("/get/all")
@@ -43,6 +51,11 @@ public class ComicController {
     @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
     @PostMapping("/post")
     public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
-        logger.info("title: " + title + " cover: " + cover.toString());
+        logger.info("title: {}", title);
+        try {
+            this.service.uploadFile(cover.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
