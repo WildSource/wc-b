@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class UserService {
     private UserRepository repository;
@@ -27,6 +29,6 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) {
-        return this.repository.findByUsername(username);
+        return this.repository.findByUsername(username).orElseThrow(NoSuchElementException::new);
     }
 }

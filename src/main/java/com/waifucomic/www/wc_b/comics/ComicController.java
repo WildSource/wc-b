@@ -1,9 +1,9 @@
 package com.waifucomic.www.wc_b.comics;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/comics")
 public class ComicController {
+    private Logger logger = LoggerFactory.getLogger(ComicController.class);
+
     @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
     @GetMapping("/get/all")
     public List<Comic> getComics() {
@@ -36,5 +38,11 @@ public class ComicController {
         comics.add(comic6);
 
         return comics;
+    }
+
+    @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
+    @PostMapping("/post")
+    public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
+        logger.info("title: " + title + " cover: " + cover.toString());
     }
 }
