@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/comics")
 public class ComicController {
     private static final Logger logger = LoggerFactory.getLogger(ComicController.class);
-    private ComicService service;
+    private final ComicService service;
 
     @Autowired
     public ComicController(ComicService service) {
@@ -51,11 +51,7 @@ public class ComicController {
     @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
     @PostMapping("/post")
     public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
-        logger.info("title: {}", title);
-        try {
-            this.service.uploadFile(cover.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        logger.info("Hello Controller");
+        this.service.createComic(title, cover);
     }
 }
