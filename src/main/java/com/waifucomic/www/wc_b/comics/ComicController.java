@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/comics")
+@CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
 public class ComicController {
     private static final Logger logger = LoggerFactory.getLogger(ComicController.class);
     private final ComicService service;
@@ -21,7 +21,7 @@ public class ComicController {
         this.service = service;
     }
 
-    @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
+
     @GetMapping("/get/all")
     public List<Comic> getComics() {
         Comic comic1 = new Comic("Gym Fever");
@@ -48,7 +48,15 @@ public class ComicController {
         return comics;
     }
 
-    @CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200"})
+    public Comic getComic(String title) {
+        return null;
+    }
+
+
+    public Comic getComic(Long id) {
+        return null;
+    }
+
     @PostMapping("/post")
     public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
         logger.info("Hello Controller");
