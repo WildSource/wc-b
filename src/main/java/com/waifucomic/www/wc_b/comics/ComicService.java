@@ -32,6 +32,10 @@ public class ComicService {
         logger.info("Comic Creation Success !");
     }
 
+    public Comic getComicById(Long id) {
+        return this.repository.findById(id).orElse(null);
+    }
+
     public void uploadFile(byte[] pFile, String path) {
         File file = new File("src/main/resources/static/" + path);
 

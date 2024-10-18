@@ -1,5 +1,6 @@
 package com.waifucomic.www.wc_b;
 
+import com.waifucomic.www.wc_b.comics.Comic;
 import com.waifucomic.www.wc_b.comics.ComicRepository;
 import com.waifucomic.www.wc_b.user.User;
 import com.waifucomic.www.wc_b.user.UserRepository;
@@ -29,6 +30,7 @@ public class WcBApplication {
 			comicRepository.deleteAll();
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			repository.save(new User(username, encoder.encode(passwd)));
+			comicRepository.save(new Comic("hello", "world"));
 		};
 	}
 }

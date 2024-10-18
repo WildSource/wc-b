@@ -48,18 +48,13 @@ public class ComicController {
         return comics;
     }
 
-    public Comic getComic(String title) {
-        return null;
-    }
-
-
-    public Comic getComic(Long id) {
-        return null;
+    @GetMapping("/get/{id}")
+    public Comic getComic(@PathVariable Long id) {
+        return this.service.getComicById(id);
     }
 
     @PostMapping("/post")
     public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
-        logger.info("Hello Controller");
         this.service.createComic(title, cover);
     }
 }
