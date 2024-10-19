@@ -21,15 +21,44 @@ public class ComicService {
     }
 
     public void createComic(String title, MultipartFile file) {
-        this.repository.save(new Comic(title, "http://localhost:8080/img/" + file.getOriginalFilename()));
+        this.repository.save(new Comic(title));
 
-        try {
-            uploadFile(file.getBytes(), file.getOriginalFilename());
+        this.repository.findByTitle(title).ifPresent((data) -> {
+            Long id = data.getId();
+
+            data.setPath("http://localhost:8080/img/" + id + "/cover/cover." + findFileExtension(file));
+            this.repository.save(data);
+
+            uploadFile(file, id);
+            logger.info("Comic Creation Success !");
+        });
+    }
+
+    public void uploadFile(MultipartFile mFile, Long id) {
+        File file = new File("img/" + id + "/cover/cover." + findFileExtension(mFile));
+        file.getParentFile().mkdirs();
+
+        try (OutputStream os = new FileOutputStream(file)){
+            os.write(mFile.getBytes());
+        } catch (FileNotFoundException e) {
+            logger.error("Could not find file: {}", file);
         } catch (IOException e) {
-            logger.error("Unexpected IO error: cause unknown");
+            logger.error("IO error, cause unknown");
+        }
+    }
+
+    private String findFileExtension(MultipartFile file) {
+        String fileExtension = null;
+
+        if (file.getContentType().contains("png")) {
+            fileExtension = "png";
         }
 
-        logger.info("Comic Creation Success !");
+        if (file.getContentType().contains("jpg")) {
+            fileExtension = "jpg";
+        }
+
+        return fileExtension;
     }
 
     public List<Comic> getComics() {
@@ -40,17 +69,5 @@ public class ComicService {
 
     public Comic getComicById(Long id) {
         return this.repository.findById(id).orElse(null);
-    }
-
-    public void uploadFile(byte[] pFile, String path) {
-        File file = new File("src/main/resources/static/" + path);
-
-        try (OutputStream os = new FileOutputStream(file)){
-            os.write(pFile);
-        } catch (FileNotFoundException e) {
-            logger.error("Could not find file: {}", file);
-        } catch (IOException e) {
-            logger.error("IO error, cause unknown");
-        }
     }
 }
