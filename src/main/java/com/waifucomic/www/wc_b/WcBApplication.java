@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.File;
+
 @SpringBootApplication
 public class WcBApplication {
 
@@ -26,11 +28,28 @@ public class WcBApplication {
 			ComicRepository comicRepository
 	) {
 		return (args) -> {
-			repository.deleteAll();
-			comicRepository.deleteAll();
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			repository.save(new User(username, encoder.encode(passwd)));
-			comicRepository.save(new Comic("hello", "http://localhost:8080/demo.png"));
+			internalDevSetup(username, passwd, repository, comicRepository);
+			externalSetup();
 		};
+	}
+
+	private void internalDevSetup(
+			@Value("${admin.user}") String username,
+			@Value("${admin.passwd}") String passwd,
+			UserRepository repository,
+			ComicRepository comicRepository
+	) {
+		repository.deleteAll();
+		comicRepository.deleteAll();
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		repository.save(new User(username, encoder.encode(passwd)));
+		comicRepository.save(new Comic("hello", "http://localhost:8080/demo.png"));
+	}
+
+	private void externalSetup() {
+		File imgDir = new File("img");
+		if (!imgDir.exists()) {
+			imgDir.mkdir();
+		}
 	}
 }
