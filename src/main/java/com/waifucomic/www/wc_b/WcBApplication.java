@@ -24,26 +24,24 @@ public class WcBApplication {
 	public CommandLineRunner demo(
 			@Value("${admin.user}") String username,
 			@Value("${admin.passwd}") String passwd,
-			UserRepository repository,
-			ComicRepository comicRepository
+			UserRepository repository
 	) {
 		return (args) -> {
-			internalDevSetup(username, passwd, repository, comicRepository);
+			adminSetup(username, passwd, repository);
 			externalSetup();
 		};
 	}
 
-	private void internalDevSetup(
+	private void adminSetup(
 			@Value("${admin.user}") String username,
 			@Value("${admin.passwd}") String passwd,
-			UserRepository repository,
-			ComicRepository comicRepository
+			UserRepository repository
 	) {
-		repository.deleteAll();
-		comicRepository.deleteAll();
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		repository.save(new User(username, encoder.encode(passwd)));
-		comicRepository.save(new Comic("hello", "http://localhost:8080/demo.png"));
+		if (repository.count() > 1 || repository.count() == 0) {
+			repository.deleteAll();
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			repository.save(new User(username, encoder.encode(passwd)));
+		}
 	}
 
 	private void externalSetup() {

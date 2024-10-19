@@ -19,7 +19,7 @@ public class ComicService {
     }
 
     public void createComic(String title, MultipartFile file) {
-        this.repository.save(new Comic(title, "http://localhost:8080/" + file.getOriginalFilename()));
+        this.repository.save(new Comic(title, "http://localhost:8080/img/" + file.getOriginalFilename()));
 
         try {
             uploadFile(file.getBytes(), file.getOriginalFilename());
