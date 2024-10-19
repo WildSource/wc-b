@@ -1,7 +1,5 @@
 package com.waifucomic.www.wc_b;
 
-import com.waifucomic.www.wc_b.comics.Comic;
-import com.waifucomic.www.wc_b.comics.ComicRepository;
 import com.waifucomic.www.wc_b.user.User;
 import com.waifucomic.www.wc_b.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;

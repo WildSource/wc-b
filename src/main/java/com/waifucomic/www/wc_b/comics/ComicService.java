@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ComicService {
@@ -28,6 +30,12 @@ public class ComicService {
         }
 
         logger.info("Comic Creation Success !");
+    }
+
+    public List<Comic> getComics() {
+        List<Comic> comics = new ArrayList<>();
+        this.repository.findAll().forEach(comics::add);
+        return comics;
     }
 
     public Comic getComicById(Long id) {
