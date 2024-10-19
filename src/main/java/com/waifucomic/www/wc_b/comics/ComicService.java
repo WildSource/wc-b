@@ -19,12 +19,10 @@ public class ComicService {
     }
 
     public void createComic(String title, MultipartFile file) {
-        String path = file.getOriginalFilename();
-
-        this.repository.save(new Comic(title, path));
+        this.repository.save(new Comic(title, "http://localhost:8080/" + file.getOriginalFilename()));
 
         try {
-            uploadFile(file.getBytes(), path);
+            uploadFile(file.getBytes(), file.getOriginalFilename());
         } catch (IOException e) {
             logger.error("Unexpected IO error: cause unknown");
         }

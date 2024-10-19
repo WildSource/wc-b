@@ -30,7 +30,7 @@ public class WcBApplication {
 			comicRepository.deleteAll();
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			repository.save(new User(username, encoder.encode(passwd)));
-			comicRepository.save(new Comic("hello", "world"));
+			comicRepository.save(new Comic("hello", "http://localhost:8080/demo.png"));
 		};
 	}
 }
