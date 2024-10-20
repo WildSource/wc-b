@@ -30,6 +30,11 @@ public class ComicController {
         return this.service.getComicById(id);
     }
 
+    @GetMapping("/search/{pattern}")
+    public List<Comic> searchComics(@PathVariable String pattern) {
+        return this.service.searchContainsByTitle(pattern);
+    }
+
     @PostMapping("/post")
     public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
         this.service.createComic(title, cover);

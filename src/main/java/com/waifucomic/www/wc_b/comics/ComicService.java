@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComicService {
@@ -32,6 +33,10 @@ public class ComicService {
             uploadFile(file, id);
             logger.info("Comic Creation Success !");
         });
+    }
+
+    public List<Comic> searchContainsByTitle(String pattern) {
+        return this.repository.findByTitleContaining(pattern).get();
     }
 
     public void uploadFile(MultipartFile mFile, Long id) {
