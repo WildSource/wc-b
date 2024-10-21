@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.waifucomic.www</groupId>
 	<artifactId>wc-b</artifactId>
-	<version>3.0.1</version>
+	<version>3.0.2</version>
 	<name>wc-b</name>
 	<description>Backend written in Spring Boot for waifucomics.com</description>
 	<url/>
@@ -39,6 +39,16 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- dev and testing db -->
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.3.232</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- prod db -->
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>

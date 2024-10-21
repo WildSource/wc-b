@@ -4,7 +4,7 @@ package com.waifucomic.www.wc_b.comics;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "comic", schema = "wc")
+//Prod @Table(name = "comic", schema = "wc")
 public class Comic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

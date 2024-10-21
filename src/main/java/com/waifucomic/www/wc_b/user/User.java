@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
 @Entity
-@Table(name = "users", schema = "wc")
+// Prod @Table(name = "users", schema = "wc")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
