@@ -55,12 +55,14 @@ public class ComicService {
     private String findFileExtension(MultipartFile file) {
         String fileExtension = null;
 
-        if (file.getContentType().contains("png")) {
-            fileExtension = "png";
-        }
+        String contentType = file.getContentType();
 
-        if (file.getContentType().contains("jpg")) {
-            fileExtension = "jpg";
+        if (contentType != null) {
+            if (contentType.contains("png")) {
+                fileExtension = "png";
+            } else if (contentType.contains("jpeg") || contentType.contains("jpg")) {
+                fileExtension = "jpg";
+            }
         }
 
         return fileExtension;
