@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,12 @@ public class ComicController {
     }
 
     @PostMapping("/post")
-    public void postComic(@RequestParam String title, @RequestParam MultipartFile cover) {
-        this.service.createComic(title, cover);
+    public void postComic(
+            @RequestPart(value = "title") String title,
+            @RequestPart(value = "cover") MultipartFile cover,
+            @RequestPart(value = "pages") List<MultipartFile> pages
+    ) {
+        //this.service.createComic(title, cover, pages);
+        logger.info(Arrays.toString(new List[]{pages}));
     }
 }
