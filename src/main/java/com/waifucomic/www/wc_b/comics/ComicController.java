@@ -38,9 +38,9 @@ public class ComicController {
 
     @PostMapping("/post")
     public void postComic(
-            @RequestPart(value = "title") String title,
-            @RequestPart(value = "cover") MultipartFile cover,
-            @RequestPart(value = "pages") List<MultipartFile> pages
+            @RequestParam("title") String title,
+            @RequestParam("cover") MultipartFile cover,
+            @RequestParam("pages") List<MultipartFile> pages
     ) {
         //this.service.createComic(title, cover, pages);
         logger.info(Arrays.toString(new List[]{pages}));
