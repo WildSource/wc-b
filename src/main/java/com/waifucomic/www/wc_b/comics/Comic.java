@@ -3,6 +3,8 @@ package com.waifucomic.www.wc_b.comics;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 //Prod @Table(name = "comic", schema = "wc")
 public class Comic {
@@ -11,6 +13,8 @@ public class Comic {
     private Long id;
     private String title;
     private String path;
+    @ElementCollection
+    private List<String> paths;
 
     public Comic() {
     }
@@ -48,12 +52,21 @@ public class Comic {
         this.path = path;
     }
 
+    public List<String> getPaths() {
+        return paths;
+    }
+
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
+    }
+
     @Override
     public String toString() {
         return "Comic{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", path='" + path + '\'' +
+                ", paths=" + paths +
                 '}';
     }
 }

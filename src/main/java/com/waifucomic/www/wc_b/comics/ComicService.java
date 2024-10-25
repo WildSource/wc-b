@@ -21,13 +21,14 @@ public class ComicService {
         this.repository = repository;
     }
 
-    public void createComic(String title, MultipartFile file) {
+    public void createComic(String title, MultipartFile file, List<MultipartFile> pages) {
         this.repository.save(new Comic(title));
 
         this.repository.findByTitle(title).ifPresent((data) -> {
             Long id = data.getId();
 
             data.setPath("http://localhost:8080/img/" + id + "/cover/cover." + findFileExtension(file));
+
             this.repository.save(data);
 
             uploadFile(file, id);

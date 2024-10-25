@@ -42,7 +42,6 @@ public class ComicController {
             @RequestParam("cover") MultipartFile cover,
             @RequestParam("pages") List<MultipartFile> pages
     ) {
-        //this.service.createComic(title, cover, pages);
-        logger.info(Arrays.toString(new List[]{pages}));
+        this.service.createComic(title, cover, pages);
     }
 }
