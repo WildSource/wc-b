@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class ComicService {
@@ -26,9 +27,16 @@ public class ComicService {
 
         this.repository.findByTitle(title).ifPresent((data) -> {
             Long id = data.getId();
+            String coverPath =
 
             data.setPath("http://localhost:8080/img/" + id + "/cover/cover." + findFileExtension(file));
 
+            List<String> paths = new ArrayList<>();
+            for (int i = 0; i < pages.size(); i++) {
+                MultipartFile mFile = pages.get(i);
+                paths.add("http://localhost:8080/img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile));
+            }
+            data.setPaths(paths);
             this.repository.save(data);
 
             uploadFile(file, id);
@@ -41,6 +49,19 @@ public class ComicService {
     }
 
     public void uploadFile(MultipartFile mFile, Long id) {
+        File file = new File("img/" + id + "/cover/cover." + findFileExtension(mFile));
+        file.getParentFile().mkdirs();
+
+        try (OutputStream os = new FileOutputStream(file)){
+            os.write(mFile.getBytes());
+        } catch (FileNotFoundException e) {
+            logger.error("Could not find file: {}", file);
+        } catch (IOException e) {
+            logger.error("IO error, cause unknown");
+        }
+    }
+
+    public void uploadFile(List<MultipartFile> mFile, Long id) {
         File file = new File("img/" + id + "/cover/cover." + findFileExtension(mFile));
         file.getParentFile().mkdirs();
 
