@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 @Service
 public class ComicService {
@@ -27,46 +25,45 @@ public class ComicService {
 
         this.repository.findByTitle(title).ifPresent((data) -> {
             Long id = data.getId();
-            String coverPath =
 
-            data.setPath("http://localhost:8080/img/" + id + "/cover/cover." + findFileExtension(file));
+            handleCover(id, file, data);
+            handlePages(id, pages, data);
 
-            List<String> paths = new ArrayList<>();
-            for (int i = 0; i < pages.size(); i++) {
-                MultipartFile mFile = pages.get(i);
-                paths.add("http://localhost:8080/img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile));
-            }
-            data.setPaths(paths);
-            this.repository.save(data);
-
-            uploadFile(file, id);
             logger.info("Comic Creation Success !");
         });
     }
 
-    public List<Comic> searchContainsByTitle(String pattern) {
-        return this.repository.findByTitleContaining(pattern).get();
+    private void handleCover(Long id, MultipartFile file, Comic data) {
+        String coverPath = "img/" + id + "/cover/cover." + findFileExtension(file);
+        data.setPath("http://localhost:8080/" + coverPath);
+        File fileCover = new File(coverPath);
+        uploadFile(file, fileCover);
     }
 
-    public void uploadFile(MultipartFile mFile, Long id) {
-        File file = new File("img/" + id + "/cover/cover." + findFileExtension(mFile));
-        file.getParentFile().mkdirs();
+    private void handlePages(Long id, List<MultipartFile> pages, Comic data) {
+        List<String> urlPaths = new ArrayList<>();
+        List<String> paths = new ArrayList<>();
 
-        try (OutputStream os = new FileOutputStream(file)){
-            os.write(mFile.getBytes());
-        } catch (FileNotFoundException e) {
-            logger.error("Could not find file: {}", file);
-        } catch (IOException e) {
-            logger.error("IO error, cause unknown");
+        for (int i = 0; i < pages.size(); i++) {
+            MultipartFile mFile = pages.get(i);
+            String fmt = "img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile);
+            urlPaths.add("http://localhost:8080/" + fmt);
+            paths.add(fmt);
         }
+        data.setPaths(urlPaths);
+        this.repository.save(data);
+
+        paths.forEach((path) -> pages.forEach((page) -> {
+            File file = new File(path);
+            uploadFile(page, file);
+        }));
     }
 
-    public void uploadFile(List<MultipartFile> mFile, Long id) {
-        File file = new File("img/" + id + "/cover/cover." + findFileExtension(mFile));
+    public void uploadFile(MultipartFile content, File file) {
         file.getParentFile().mkdirs();
 
         try (OutputStream os = new FileOutputStream(file)){
-            os.write(mFile.getBytes());
+            os.write(content.getBytes());
         } catch (FileNotFoundException e) {
             logger.error("Could not find file: {}", file);
         } catch (IOException e) {
@@ -88,6 +85,10 @@ public class ComicService {
         }
 
         return fileExtension;
+    }
+
+    public List<Comic> searchContainsByTitle(String pattern) {
+        return this.repository.findByTitleContaining(pattern).get();
     }
 
     public List<Comic> getComics() {
