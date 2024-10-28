@@ -53,10 +53,10 @@ public class ComicService {
         data.setPaths(urlPaths);
         this.repository.save(data);
 
-        paths.forEach((path) -> pages.forEach((page) -> {
-            File file = new File(path);
-            uploadFile(page, file);
-        }));
+        for (int j = 0 ; pages.size() > j; j++) {
+            File file = new File(paths.get(j));
+            uploadFile(pages.get(j), file);
+        }
     }
 
     public void uploadFile(MultipartFile content, File file) {
