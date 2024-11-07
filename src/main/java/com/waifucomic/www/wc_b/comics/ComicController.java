@@ -44,4 +44,9 @@ public class ComicController {
     ) {
         this.service.createComic(title, cover, pages);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteComic(@PathVariable Long id) {
+        this.service.deleteComic(id);
+    }
 }

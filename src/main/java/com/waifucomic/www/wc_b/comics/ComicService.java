@@ -33,6 +33,10 @@ public class ComicService {
         });
     }
 
+    public void deleteComic(Long id) {
+        this.repository.deleteById(id);
+    }
+
     private void handleCover(Long id, MultipartFile file, Comic data) {
         String coverPath = "img/" + id + "/cover/cover." + findFileExtension(file);
         data.setPath("http://localhost:8080/" + coverPath);
