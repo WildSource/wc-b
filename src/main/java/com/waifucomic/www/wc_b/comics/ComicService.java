@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -35,6 +36,9 @@ public class ComicService {
 
     public void deleteComic(Long id) {
         this.repository.deleteById(id);
+        File file = new File("img/" + id);
+        boolean isDeleted = FileSystemUtils.deleteRecursively(file);
+        logger.info("is comic with id: {} deleted ? {}", id, isDeleted);
     }
 
     private void handleCover(Long id, MultipartFile file, Comic data) {
