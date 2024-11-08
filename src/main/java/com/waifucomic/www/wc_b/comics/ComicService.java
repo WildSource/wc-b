@@ -58,7 +58,7 @@ public class ComicService {
             List<String> pagePaths = generateFilePaths(id, pages);
 
             data.setTitle(title);
-            data.setPath(coverPath);
+            data.setPath("http://localhost:8080/" + coverPath);
             data.setPaths(pageUrl);
             this.repository.save(data);
 
