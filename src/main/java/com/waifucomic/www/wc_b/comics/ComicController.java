@@ -49,4 +49,14 @@ public class ComicController {
     public void deleteComic(@PathVariable Long id) {
         this.service.deleteComic(id);
     }
+
+    @PutMapping("/modify/{id}")
+    public void modifyComic(
+            @PathVariable Long id,
+            @RequestParam("title") String title,
+            @RequestParam("cover") MultipartFile cover,
+            @RequestParam("pages") List<MultipartFile> pages
+    ) {
+        this.service.modifyComic(id, title, cover, pages);
+    }
 }

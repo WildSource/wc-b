@@ -5,11 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComicService {
@@ -31,6 +34,7 @@ public class ComicService {
             handlePages(id, pages, data);
 
             logger.info("Comic Creation Success !");
+            logger.info(this.repository.findById(id).toString());
         });
     }
 
@@ -41,25 +45,72 @@ public class ComicService {
         logger.info("is comic with id: {} deleted ? {}", id, isDeleted);
     }
 
+    public void modifyComic(
+            Long id,
+            String title,
+            MultipartFile cover,
+            List<MultipartFile> pages
+    ) {
+        Optional<Comic> comic = this.repository.findById(id);
+        comic.ifPresent((data) -> {
+            String coverPath = generateCoverUrl(id, cover);
+            List<String> pageUrl = generatePageUrl(id, pages);
+            List<String> pagePaths = generateFilePaths(id, pages);
+
+            data.setTitle(title);
+            data.setPath(coverPath);
+            data.setPaths(pageUrl);
+            this.repository.save(data);
+
+            File file = new File("img/" + id);
+            FileSystemUtils.deleteRecursively(file);
+
+            handleCover(id, cover, data);
+            for (int i = 0 ; i < pages.size() ; i++) {
+                uploadFile(pages.get(i), new File(pagePaths.get(i)));
+            }
+            logger.info(this.repository.findById(id).toString());
+        });
+    }
+
+    private String generateCoverUrl(Long id, MultipartFile file) {
+        return "img/" + id + "/cover/cover." + findFileExtension(file);
+    }
+
+    private List<String> generatePageUrl(Long id, List<MultipartFile> pages) {
+        List<String> urlPaths = new ArrayList<>();
+
+        for (int i = 0; i < pages.size(); i++) {
+            MultipartFile mFile = pages.get(i);
+            String fmt = "img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile);
+            urlPaths.add("http://localhost:8080/" + fmt);
+        }
+
+        return urlPaths;
+    }
+
+    private List<String> generateFilePaths(Long id, List<MultipartFile> pages) {
+        List<String> paths = new ArrayList<>();
+        for (int i = 0; i < pages.size(); i++) {
+            MultipartFile mFile = pages.get(i);
+            String fmt = "img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile);
+            paths.add(fmt);
+        }
+        return paths;
+    }
+
     private void handleCover(Long id, MultipartFile file, Comic data) {
-        String coverPath = "img/" + id + "/cover/cover." + findFileExtension(file);
+        String coverPath = generateCoverUrl(id, file);
         data.setPath("http://localhost:8080/" + coverPath);
         File fileCover = new File(coverPath);
         uploadFile(file, fileCover);
     }
 
     private void handlePages(Long id, List<MultipartFile> pages, Comic data) {
-        List<String> urlPaths = new ArrayList<>();
-        List<String> paths = new ArrayList<>();
-
-        for (int i = 0; i < pages.size(); i++) {
-            MultipartFile mFile = pages.get(i);
-            String fmt = "img/" + id + "/page" + (i + 1) + "." + findFileExtension(mFile);
-            urlPaths.add("http://localhost:8080/" + fmt);
-            paths.add(fmt);
-        }
-        data.setPaths(urlPaths);
+        data.setPaths(generatePageUrl(id, pages));
         this.repository.save(data);
+
+        List<String> paths = generateFilePaths(id, pages);
 
         for (int j = 0 ; pages.size() > j; j++) {
             File file = new File(paths.get(j));
