@@ -23,6 +23,11 @@ public class AuthService {
         return authState;
     }
 
+    public boolean logout() {
+        this.authState = false;
+        return getAuthState();
+    }
+
     public boolean getAuthState() {
         return this.authState;
     }

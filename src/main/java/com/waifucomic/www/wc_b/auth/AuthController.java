@@ -22,6 +22,11 @@ public class AuthController {
         return this.service.getAuthState();
     }
 
+    @GetMapping("/logout")
+    public boolean logout() {
+        return this.service.logout();
+    }
+
     @PostMapping("/validate")
     public boolean validateCredentials(@RequestBody Credentials credentials) {
         return this.service.validateUser(credentials);
