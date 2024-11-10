@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200", "https://waifuwebcomics.com/"})
+@CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200", "https://waifuwebcomics.com"})
 public class AuthController {
     private final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private AuthService service;
