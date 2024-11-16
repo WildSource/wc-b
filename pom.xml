@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.waifucomic.www</groupId>
 	<artifactId>wc-b</artifactId>
-	<version>4.0.2</version>
+	<version>5.0.0</version>
 	<name>wc-b</name>
 	<description>Backend written in Spring Boot for waifucomics.com</description>
 	<url/>
