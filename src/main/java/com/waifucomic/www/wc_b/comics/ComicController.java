@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comics")
-@CrossOrigin(origins = {"http://127.0.0.1:4200", "http://localhost:4200", "https://waifuwebcomics.com/"})
 public class ComicController {
     private static final Logger logger = LoggerFactory.getLogger(ComicController.class);
     private final ComicService service;
